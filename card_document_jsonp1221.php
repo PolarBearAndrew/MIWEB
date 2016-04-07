@@ -1,444 +1,447 @@
+
 <?php
-   require_once ('config.php');
+require_once ('config.php');
 
-    $did = $_GET['document'];
-    //$pid=40;
-    //$pidarray=PageidGet($did,$conn);
-    //$pid=$pidarray['0'];
+$did = $_GET['document'];
 
+// $pid=40;
+// $pidarray=PageidGet($did,$conn);
+// $pid=$pidarray['0'];
+// Get document Pageid
 
-    //Get document Pageid
-    $sqlPageidGet = "SELECT pageid FROM document_page WHERE documentid='$did'";
-        $params = array();
-        $options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
-        $stmt = sqlsrv_query( $conn, $sqlPageidGet  , $params, $options );
+$sqlPageidGet = "SELECT pageid FROM document_page WHERE documentid='$did'";
+$params = array();
+$options = array(
+	"Scrollable" => SQLSRV_CURSOR_KEYSET
+);
+$stmt = sqlsrv_query($conn, $sqlPageidGet, $params, $options);
+$pageidRow = sqlsrv_num_rows($stmt);
 
-        $pageidRow = sqlsrv_num_rows( $stmt );
-        if( $stmt === false) {
-            die( print_r( sqlsrv_errors(), true) );
-          }
-      $i=0;
-        while($pageidarr = sqlsrv_fetch_array($stmt)){
-          $pageidarrary[$i] = $pageidarr;
-          $i = $i+1;
-        }
-      sqlsrv_free_stmt( $stmt);
+if ($stmt === false) {
+	die(print_r(sqlsrv_errors() , true));
+}
 
-    if($did !== fales)
-    {
-      for($i=0;$i<$pageidRow;$i++)
-      {
+$i = 0;
 
-          $page[$i] = array ('text'=>DocumentidTextGet($pageidarrary[$i]['pageid'],$conn),
-                              'bgimg'=>DocumentidBgimgGet($pageidarrary[$i]['pageid'],$conn),
-                              'image'=>DocumentidimageGet($pageidarrary[$i]['pageid'],$conn),
-                              'illimage'=>DocumentidIllimgGet($pageidarrary[$i]['pageid'],$conn),
-                              'bgimgLayout'=>DocumentLayoutBgimgGet($pageidarrary[$i]['pageid'],$conn));
-          
-    }
-     $documentarray = array ('page'=>$page);
-     //echo json_encode($documentarray);
-     echo $_GET['callback']."(".json_encode($documentarray).")";    
+while ($pageidarr = sqlsrv_fetch_array($stmt)) {
+	$pageidarrary[$i] = $pageidarr;
+	$i = $i + 1;
+}
 
-     //echo $documentarray['page'][0]['text'][0]['textid'];
+sqlsrv_free_stmt($stmt);
 
-    }
-    else
-    {
-     echo "error"; 
-    }
+if ($did !== fales) {
+	for ($i = 0; $i < $pageidRow; $i++) {
+		$page[$i] = array(
+			'text' => DocumentidTextGet($pageidarrary[$i]['pageid'], $conn) ,
+			'bgimg' => DocumentidBgimgGet($pageidarrary[$i]['pageid'], $conn) ,
+			'image' => DocumentidimageGet($pageidarrary[$i]['pageid'], $conn) ,
+			'illimage' => DocumentidIllimgGet($pageidarrary[$i]['pageid'], $conn) ,
+			'bgimgLayout' => DocumentLayoutBgimgGet($pageidarrary[$i]['pageid'], $conn)
+		);
+	}
 
+	$documentarray = array(
+		'page' => $page
+	);
 
-    function MemberidGet($acc,$conn)
-    {
-      if ($acc != fales)
-      {
-        $sqlMemGet="SELECT memberid FROM member WHERE account='$acc'";
-        $result = sqlsrv_query($conn, $sqlMemGet);
-          while( $obj = sqlsrv_fetch_object( $result))
-          {
-            $memberid[] = $obj->memberid;
-          }
-        $mid= $memberid[0];
-        return $mid;
-       //$obj = sqlsrv_fetch_object( $result);
-      }
-      else
-      {
-        return null;
-      }
-    }
-    
-    function PageidGet($did,$conn)
-    {
-      //echo $did;
-      if($did !== fales)
-      {
-        $sqlPageidGet = "SELECT pageid FROM document_page WHERE documentid='$did'";
-        $params = array();
-        $options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
-        $stmt = sqlsrv_query( $conn, $sqlPageidGet  , $params, $options );
+	// echo json_encode($documentarray);
 
-        $pageidRow = sqlsrv_num_rows( $stmt );
-        if( $stmt === false) {
-            die( print_r( sqlsrv_errors(), true) );
-          }
-          $pageidarray = sqlsrv_fetch_array($stmt);
-           
-          sqlsrv_free_stmt( $stmt);
-          return $pageidarray;
+	echo $_GET['callback'] . "(" . json_encode($documentarray) . ")";
 
-      }
+	// echo $documentarray['page'][0]['text'][0]['textid'];
 
-    }
+}
+else {
+	echo "error";
+}
 
+function MemberidGet($acc, $conn)
+{
+	if ($acc != fales) {
+		$sqlMemGet = "SELECT memberid FROM member WHERE account='$acc'";
+		$result = sqlsrv_query($conn, $sqlMemGet);
+		while ($obj = sqlsrv_fetch_object($result)) {
+			$memberid[] = $obj->memberid;
+		}
 
-    function DocumentidGet($mid,$conn)
-    {
-      if ($mid != fales)
-      {
-        $sqlDocGet="SELECT documentid FROM document WHERE memberid='$mid'";
-        $result = sqlsrv_query($conn, $sqlDocGet);
-        //echo "result - " . $result;
-          while( $obj = sqlsrv_fetch_object( $result))
-          {
-            $documentid[] = $obj->documentid;
-          }
-        $did= $documentid[0];
-        return $did;
-       //$obj = sqlsrv_fetch_object( $result);
-      }
-      else
-      {
-        return null;
-      }
-    }
+		$mid = $memberid[0];
+		return $mid;
 
-    function DocumentidPgaeGet($did,$conn)
-    {
-      if ($did != fales)
-      {
-        $sqlPageGet="SELECT pageid FROM document_page WHERE documentid='$did'";
-        $result = sqlsrv_query($conn, $sqlPageGet);
-        //echo "result - " . $result;
-          while( $obj = sqlsrv_fetch_object( $result))
-          {
-            $pageid[] = $obj->pageid;
-          }
-        $pid= $pageid[0];
-        return $pid;
-       //$obj = sqlsrv_fetch_object( $result);
-      }
-      else
-      {
-        return null;
-      }
-    }
+		// $obj = sqlsrv_fetch_object( $result);
 
-    function DocumentidTextGet($pid,$conn)
-    {
-      if ($pid !== fales)
-      {
-        $sqlTextGet="SELECT * FROM document_text WHERE pageid='$pid'";
-        $result = sqlsrv_query($conn, $sqlTextGet);
-        //echo "result - " . $result;
-        
+	}
+	else {
+		return null;
+	}
+}
 
-        $i=0;
-        while($obj = sqlsrv_fetch_object( $result)){
-          $text= array(textid => $obj->textid, 
-                          objectid =>$obj->objectid, 
-                          pageid =>$obj->pageid, 
-                          name => $obj->name,
-                          objectheight => $obj->objectheight,
-                          objectwidth => $obj->objectwidth,
-                          objectxpos => $obj->objectxpos,
-                          objectypos => $obj->objectypos,
-                          text => $obj->text,
-                          charfont => $obj->charfont,
-                          charsize => $obj->charsize,
-                          charcolor => $obj->charcolor,
-                          charstrokesize => $obj->charstrokesize,
-                          charstrokecolor => $obj->charstrokecolor,
-                          charalign => $obj->charalign,
-                          charbold => $obj->charbold,
-                          charitalic => $obj->charitalic,
-                          objectkey => $obj->objectkey,
-                          zindex => $obj->zindex,
-                          rotation => $obj->rotation,
-                          objectwarning => $obj->objectwarning);
+function PageidGet($did, $conn)
+{
 
-          $textbox[$i] = $text;
-          $i=$i+1;
-        };
-        //$textarray = array ('TEXT'=>$textbox);
-        //echo json_encode($textarray);
-        return $textbox;
-            //echo $text['textid']."<br/>";
-            //echo $text['pageid']."<br/>";
-            /*textid
-            objectid
-            pageid
-            name
-            objectheight
-            objectwidth
-            objectxpos
-            objectypos
-            text
-            charfont
-            charsize
-            charcolor
-            charstrokesize
-            charstrokecolor
-            charalign
-            charbold
-            charitalic
-            objectkey
-            zindex
-            rotation
-            objectwarning*/
-      }
-      else
-      {
-        return null;
-      }
-    }
+	// echo $did;
 
+	if ($did !== fales) {
+		$sqlPageidGet = "SELECT pageid FROM document_page WHERE documentid='$did'";
+		$params = array();
+		$options = array(
+			"Scrollable" => SQLSRV_CURSOR_KEYSET
+		);
+		$stmt = sqlsrv_query($conn, $sqlPageidGet, $params, $options);
+		$pageidRow = sqlsrv_num_rows($stmt);
+		if ($stmt === false) {
+			die(print_r(sqlsrv_errors() , true));
+		}
 
-    function DocumentidBgimgGet($pid,$conn)
-    {
-      if ($pid !== fales)
-      {
-        $sqlBgimgGet="SELECT * FROM document_bgimg WHERE pageid='$pid'";
-        $result = sqlsrv_query($conn, $sqlBgimgGet);
-        //echo "result - " . $result;
-        
+		$pageidarray = sqlsrv_fetch_array($stmt);
+		sqlsrv_free_stmt($stmt);
+		return $pageidarray;
+	}
+}
 
-        $i=0;
-        while($obj = sqlsrv_fetch_object( $result)){
-          $bgimg= array(bgimgid => $obj->bgimgid,
-                          pageid =>$obj->pageid, 
-                          objectid =>$obj->objectid, 
-                          name => $obj->name,
-                          objectheight => $obj->objectheight,
-                          objectwidth => $obj->objectwidth,
-                          objectxpos => $obj->objectxpos,
-                          objectypos => $obj->objectypos,
-                          imagepath => $obj->imagepath,
-                          zindex => $obj->zindex);
+function DocumentidGet($mid, $conn)
+{
+	if ($mid != fales) {
+		$sqlDocGet = "SELECT documentid FROM document WHERE memberid='$mid'";
+		$result = sqlsrv_query($conn, $sqlDocGet);
 
-          $bgimgbox[$i] = $bgimg;
-          $i=$i+1;
-        };
-        //$imgarray= array ('BGIMG'=>$bgimgbox);
-        //echo json_encode($imgarray);
-        return $bgimgbox;
+		// echo "result - " . $result;
 
-      }
-      else
-      {
-        return null;
-      }
-    }
+		while ($obj = sqlsrv_fetch_object($result)) {
+			$documentid[] = $obj->documentid;
+		}
 
-function DocumentidimageGet($pid,$conn)
-    {
-      if ($pid !== fales)
-      {
-        $sqlImageGet="SELECT * FROM document_image WHERE pageid='$pid'";
-        $result = sqlsrv_query($conn, $sqlImageGet);
-        //echo "result - " . $result;
-        
+		$did = $documentid[0];
+		return $did;
 
-        $i=0;
-        while($obj = sqlsrv_fetch_object( $result)){
-          $image= array(imageid => $obj->imageid,
-                          pageid =>$obj->pageid, 
-                          objectid =>$obj->objectid, 
-                          name => $obj->name,
-                          objectheight => $obj->objectheight,
-                          objectwidth => $obj->objectwidth,
-                          objectxpos => $obj->objectxpos,
-                          objectypos => $obj->objectypos,
-                          imagepath => $obj->imagepath,
-                          zindex => $obj->zindex,
-                          cropper => $obj->cropper,
-                          cutxpos =>$obj->cutxpos, 
-                          cutypos =>$obj->cutypos, 
-                          cutheight => $obj->cutheight,
-                          cutwidth => $obj->cutwidth,
-                          objectkey => $obj->objectkey,
-                          rotation => $obj->rotation,
-                          objetctwarning => $obj->objetctwarning,
-                          picheight => $obj->picheight,
-                          picwidth => $obj->picwidth,
-                          reheight => $obj->reheight,
-                          rewidth => $obj->rewidth,
-                          diycut => $obj->diycut,
-                          awidht => $obj->awidht,
-                          aheight => $obj->aheight);
+		// $obj = sqlsrv_fetch_object( $result);
 
-          $imagebox[$i] = $image;
-          $i=$i+1;
-        };
-        //$imgarray= array ('BGIMG'=>$bgimgbox);
-        //echo json_encode($imgarray);
+	}
+	else {
+		return null;
+	}
+}
 
-        return $imagebox;
+function DocumentidPgaeGet($did, $conn)
+{
+	if ($did != fales) {
+		$sqlPageGet = "SELECT pageid FROM document_page WHERE documentid='$did'";
+		$result = sqlsrv_query($conn, $sqlPageGet);
 
-      }
-      else
-      {
-        return null;
-      }
-    }
+		// echo "result - " . $result;
 
+		while ($obj = sqlsrv_fetch_object($result)) {
+			$pageid[] = $obj->pageid;
+		}
 
-    function DocumentidIllimgGet($pid,$conn)
-    {
-      if ($pid !== fales)
-      {
-        $sqlIllimgGet="SELECT * FROM document_illimg WHERE pageid='$pid'";
-        $result = sqlsrv_query($conn, $sqlIllimgGet);
-        //echo "result - " . $result;
-        
+		$pid = $pageid[0];
+		return $pid;
 
-        $i=0;
-        while($obj = sqlsrv_fetch_object( $result)){
-          $illimg= array(illimgid => $obj->illimgid,
-                          pageid =>$obj->pageid,
-                          objectid =>$obj->objectid,
-                          name => $obj->name,
-                          objectheight => $obj->objectheight,
-                          objectwidth => $obj->objectwidth,
-                          objectxpos => $obj->objectxpos,
-                          objectypos => $obj->objectypos,
-                          imagepath => $obj->imagepath,
-                          zindex => $obj->zindex,
-                          cropper => $obj->cropper,
-                          cutxpos =>$obj->cutxpos, 
-                          cutypos =>$obj->cutypos, 
-                          cutheight => $obj->cutheight,
-                          cutwidth => $obj->cutwidth,
-                          objectkey => $obj->objectkey,
-                          rotation => $obj->rotation,
-                          objetctwarning => $obj->objetctwarning,
-                          picheight => $obj->picheight,
-                          picwidth => $obj->picwidth,
-                          reheight => $obj->reheight,
-                          rewidth => $obj->rewidth,
-                          diycut => $obj->diycut,
-                          awidht => $obj->awidht,
-                          aheight => $obj->aheight);
+		// $obj = sqlsrv_fetch_object( $result);
 
-          $illimgbox[$i] = $illimg;
-          $i=$i+1;
-        };
-        //$imgarray= array ('BGIMG'=>$bgimgbox);
-        //echo json_encode($imgarray);
-        return $illimgbox;
+	}
+	else {
+		return null;
+	}
+}
 
-      }
-      else
-      {
-        return null;
-      }
-    }
+function DocumentidTextGet($pid, $conn)
+{
+	if ($pid !== fales) {
+		$sqlTextGet = "SELECT * FROM document_text WHERE pageid='$pid'";
+		$result = sqlsrv_query($conn, $sqlTextGet);
 
+		// echo "result - " . $result;
 
-    function DocumentLayoutBgimgGet($pid,$conn)
-    {
-      if ($pid !== fales)
-      {
-        $sqlLayoutBgimgGet="SELECT * FROM layout_bgimg Where objectheight = '476' and objectwidth = '782' and imagepath LIKE 'LBackground/Business_card/%'";
-        $result = sqlsrv_query($conn, $sqlLayoutBgimgGet);
-        //echo "result - " . $result;
-        
+		$i = 0;
+		while ($obj = sqlsrv_fetch_object($result)) {
+			$text = array(
+				textid => $obj->textid,
+				objectid => $obj->objectid,
+				pageid => $obj->pageid,
+				name => $obj->name,
+				objectheight => $obj->objectheight,
+				objectwidth => $obj->objectwidth,
+				objectxpos => $obj->objectxpos,
+				objectypos => $obj->objectypos,
+				text => $obj->text,
+				charfont => $obj->charfont,
+				charsize => $obj->charsize,
+				charcolor => $obj->charcolor,
+				charstrokesize => $obj->charstrokesize,
+				charstrokecolor => $obj->charstrokecolor,
+				charalign => $obj->charalign,
+				charbold => $obj->charbold,
+				charitalic => $obj->charitalic,
+				objectkey => $obj->objectkey,
+				zindex => $obj->zindex,
+				rotation => $obj->rotation,
+				objectwarning => $obj->objectwarning
+			);
+			$textbox[$i] = $text;
+			$i = $i + 1;
+		};
 
-        $i=0;
-        while($obj = sqlsrv_fetch_object( $result)){
-         $bgimg= array(bgimgid => $obj->bgimgid,
-                          pageid =>$obj->pageid, 
-                          objectid =>$obj->objectid, 
-                          name => $obj->name,
-                          objectheight => $obj->objectheight,
-                          objectwidth => $obj->objectwidth,
-                          objectxpos => $obj->objectxpos,
-                          objectypos => $obj->objectypos,
-                          imagepath => $obj->imagepath,
-                          zindex => $obj->zindex);
+		// $textarray = array ('TEXT'=>$textbox);
+		// echo json_encode($textarray);
 
+		return $textbox;
 
-          $bgimgbox[$i] = $bgimg;
-          $i=$i+1;
-        };
-        //$imgarray= array ('BGIMG'=>$bgimgbox);
-        //echo json_encode($imgarray);
-        return $bgimgbox;
+		// echo $text['textid']."<br/>";
+		// echo $text['pageid']."<br/>";
 
-      }
-      else
-      {
-        return null;
-      }
-    }
+		/*textid
+		objectid
+		pageid
+		name
+		objectheight
+		objectwidth
+		objectxpos
+		objectypos
+		text
+		charfont
+		charsize
+		charcolor
+		charstrokesize
+		charstrokecolor
+		charalign
+		charbold
+		charitalic
+		objectkey
+		zindex
+		rotation
+		objectwarning*/
+	}
+	else {
+		return null;
+	}
+}
+
+function DocumentidBgimgGet($pid, $conn)
+{
+	if ($pid !== fales) {
+		$sqlBgimgGet = "SELECT * FROM document_bgimg WHERE pageid='$pid'";
+		$result = sqlsrv_query($conn, $sqlBgimgGet);
+
+		// echo "result - " . $result;
+
+		$i = 0;
+		while ($obj = sqlsrv_fetch_object($result)) {
+			$bgimg = array(
+				bgimgid => $obj->bgimgid,
+				pageid => $obj->pageid,
+				objectid => $obj->objectid,
+				name => $obj->name,
+				objectheight => $obj->objectheight,
+				objectwidth => $obj->objectwidth,
+				objectxpos => $obj->objectxpos,
+				objectypos => $obj->objectypos,
+				imagepath => $obj->imagepath,
+				zindex => $obj->zindex
+			);
+			$bgimgbox[$i] = $bgimg;
+			$i = $i + 1;
+		};
+
+		// $imgarray= array ('BGIMG'=>$bgimgbox);
+		// echo json_encode($imgarray);
+
+		return $bgimgbox;
+	}
+	else {
+		return null;
+	}
+}
+
+function DocumentidimageGet($pid, $conn)
+{
+	if ($pid !== fales) {
+		$sqlImageGet = "SELECT * FROM document_image WHERE pageid='$pid'";
+		$result = sqlsrv_query($conn, $sqlImageGet);
+
+		// echo "result - " . $result;
+
+		$i = 0;
+		while ($obj = sqlsrv_fetch_object($result)) {
+			$image = array(
+				imageid => $obj->imageid,
+				pageid => $obj->pageid,
+				objectid => $obj->objectid,
+				name => $obj->name,
+				objectheight => $obj->objectheight,
+				objectwidth => $obj->objectwidth,
+				objectxpos => $obj->objectxpos,
+				objectypos => $obj->objectypos,
+				imagepath => $obj->imagepath,
+				zindex => $obj->zindex,
+				cropper => $obj->cropper,
+				cutxpos => $obj->cutxpos,
+				cutypos => $obj->cutypos,
+				cutheight => $obj->cutheight,
+				cutwidth => $obj->cutwidth,
+				objectkey => $obj->objectkey,
+				rotation => $obj->rotation,
+				objetctwarning => $obj->objetctwarning,
+				picheight => $obj->picheight,
+				picwidth => $obj->picwidth,
+				reheight => $obj->reheight,
+				rewidth => $obj->rewidth,
+				diycut => $obj->diycut,
+				awidht => $obj->awidht,
+				aheight => $obj->aheight
+			);
+			$imagebox[$i] = $image;
+			$i = $i + 1;
+		};
+
+		// $imgarray= array ('BGIMG'=>$bgimgbox);
+		// echo json_encode($imgarray);
+
+		return $imagebox;
+	}
+	else {
+		return null;
+	}
+}
+
+function DocumentidIllimgGet($pid, $conn)
+{
+	if ($pid !== fales) {
+		$sqlIllimgGet = "SELECT * FROM document_illimg WHERE pageid='$pid'";
+		$result = sqlsrv_query($conn, $sqlIllimgGet);
+
+		// echo "result - " . $result;
+
+		$i = 0;
+		while ($obj = sqlsrv_fetch_object($result)) {
+			$illimg = array(
+				illimgid => $obj->illimgid,
+				pageid => $obj->pageid,
+				objectid => $obj->objectid,
+				name => $obj->name,
+				objectheight => $obj->objectheight,
+				objectwidth => $obj->objectwidth,
+				objectxpos => $obj->objectxpos,
+				objectypos => $obj->objectypos,
+				imagepath => $obj->imagepath,
+				zindex => $obj->zindex,
+				cropper => $obj->cropper,
+				cutxpos => $obj->cutxpos,
+				cutypos => $obj->cutypos,
+				cutheight => $obj->cutheight,
+				cutwidth => $obj->cutwidth,
+				objectkey => $obj->objectkey,
+				rotation => $obj->rotation,
+				objetctwarning => $obj->objetctwarning,
+				picheight => $obj->picheight,
+				picwidth => $obj->picwidth,
+				reheight => $obj->reheight,
+				rewidth => $obj->rewidth,
+				diycut => $obj->diycut,
+				awidht => $obj->awidht,
+				aheight => $obj->aheight
+			);
+			$illimgbox[$i] = $illimg;
+			$i = $i + 1;
+		};
+
+		// $imgarray= array ('BGIMG'=>$bgimgbox);
+		// echo json_encode($imgarray);
+
+		return $illimgbox;
+	}
+	else {
+		return null;
+	}
+}
+
+function DocumentLayoutBgimgGet($pid, $conn)
+{
+	if ($pid !== fales) {
+		$sqlLayoutBgimgGet = "SELECT * FROM layout_bgimg Where objectheight = '476' and objectwidth = '782' and imagepath LIKE 'LBackground/Business_card/%'";
+		$result = sqlsrv_query($conn, $sqlLayoutBgimgGet);
+
+		// echo "result - " . $result;
+
+		$i = 0;
+		while ($obj = sqlsrv_fetch_object($result)) {
+			$bgimg = array(
+				bgimgid => $obj->bgimgid,
+				pageid => $obj->pageid,
+				objectid => $obj->objectid,
+				name => $obj->name,
+				objectheight => $obj->objectheight,
+				objectwidth => $obj->objectwidth,
+				objectxpos => $obj->objectxpos,
+				objectypos => $obj->objectypos,
+				imagepath => $obj->imagepath,
+				zindex => $obj->zindex
+			);
+			$bgimgbox[$i] = $bgimg;
+			$i = $i + 1;
+		};
+
+		// $imgarray= array ('BGIMG'=>$bgimgbox);
+		// echo json_encode($imgarray);
+
+		return $bgimgbox;
+	}
+	else {
+		return null;
+	}
+}
 
 /*
 function DocumentLayoutBgimgGet($did,$conn)
-    {
-      if ($did !== fales)
-      {
-        $sqlDocumentSubcateidGet="SELECT subcateid FROM document LEFT JOIN prod_style ON document.subcateid = prod_style.prod_styleid  WHERE  documentid = '$did'";
-        $result = sqlsrv_query($conn, $sqlDocumentSubcateidGet);
-        //echo "result - " . $result;
-        
+{
+if ($did !== fales)
+{
+$sqlDocumentSubcateidGet="SELECT subcateid FROM document LEFT JOIN prod_style ON document.subcateid = prod_style.prod_styleid  WHERE  documentid = '$did'";
+$result = sqlsrv_query($conn, $sqlDocumentSubcateidGet);
 
-        $i=0;
-        while($obj = sqlsrv_fetch_object( $result)){
-          $illimg= array(illimgid => $obj->illimgid,
-                          pageid =>$obj->pageid,
-                          objectid =>$obj->objectid,
-                          name => $obj->name,
-                          objectheight => $obj->objectheight,
-                          objectwidth => $obj->objectwidth,
-                          objectxpos => $obj->objectxpos,
-                          objectypos => $obj->objectypos,
-                          imagepath => $obj->imagepath,
-                          zindex => $obj->zindex,
-                          cropper => $obj->cropper,
-                          cutxpos =>$obj->cutxpos, 
-                          cutypos =>$obj->cutypos, 
-                          cutheight => $obj->cutheight,
-                          cutwidth => $obj->cutwidth,
-                          objectkey => $obj->objectkey,
-                          rotation => $obj->rotation,
-                          objetctwarning => $obj->objetctwarning,
-                          picheight => $obj->picheight,
-                          picwidth => $obj->picwidth,
-                          reheight => $obj->reheight,
-                          rewidth => $obj->rewidth,
-                          diycut => $obj->diycut,
-                          awidht => $obj->awidht,
-                          aheight => $obj->aheight);
+// echo "result - " . $result;
 
-          $illimgbox[$i] = $illimg;
-          $i=$i+1;
-        };
-        //$imgarray= array ('BGIMG'=>$bgimgbox);
-        //echo json_encode($imgarray);
-        return $illimgbox;
+$i=0;
+while($obj = sqlsrv_fetch_object( $result)){
+$illimg= array(illimgid => $obj->illimgid,
+pageid =>$obj->pageid,
+objectid =>$obj->objectid,
+name => $obj->name,
+objectheight => $obj->objectheight,
+objectwidth => $obj->objectwidth,
+objectxpos => $obj->objectxpos,
+objectypos => $obj->objectypos,
+imagepath => $obj->imagepath,
+zindex => $obj->zindex,
+cropper => $obj->cropper,
+cutxpos =>$obj->cutxpos,
+cutypos =>$obj->cutypos,
+cutheight => $obj->cutheight,
+cutwidth => $obj->cutwidth,
+objectkey => $obj->objectkey,
+rotation => $obj->rotation,
+objetctwarning => $obj->objetctwarning,
+picheight => $obj->picheight,
+picwidth => $obj->picwidth,
+reheight => $obj->reheight,
+rewidth => $obj->rewidth,
+diycut => $obj->diycut,
+awidht => $obj->awidht,
+aheight => $obj->aheight);
 
-      }
-      else
-      {
-        return null;
-      }
-    }*/
+$illimgbox[$i] = $illimg;
+$i=$i+1;
+};
 
+// $imgarray= array ('BGIMG'=>$bgimgbox);
+// echo json_encode($imgarray);
 
+return $illimgbox;
 
-
-
-
-
+}
+else
+{
+return null;
+}
+}*/
 ?>
