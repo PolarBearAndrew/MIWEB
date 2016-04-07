@@ -1,12 +1,26 @@
 <?php
 
+	// const
+	$METHOD = 'POST';
+
 	// init
 	require_once ('init.php');
 
+	function resData($login, $msg) {
+		$data = array(
+			'login' => $login,
+			'message' => $msg,
+		);
+		echo json_encode($data);
+	}
+
+	if($_SERVER['REQUEST_METHOD'] != $METHOD) {
+		return;
+	}
 
 	// already login
-	if($_SESSION['isLogin'] != 'true') {
-		return echo json_encode({ login : true });
+	if($_SESSION['isLogin'] == 'true') {
+		return resData(true, 'Already Login');
 	}
 
 	// validate params
@@ -14,7 +28,7 @@
 		!isset($_POST['account']) &&
 		!isset($_POST['password'])
 	) {
-		return echo json_encode({ login : false });
+		return resData(false, 'Params validate fail');
 	}
 
 	// validate users
@@ -22,31 +36,26 @@
 	$password = $_POST['password'];
 
 	if ($memberType == 1) {
-		$sqlmember = "select memberid,checkauth,compid from member where disabled!=1 and compid=0 and account='$account' and password='$password'";
+		$sqlmember = "select memberid,checkauth,compid from member where disabled!=1 and compid=0 and account='$account' and password='$password' and checkauth=1";
 	}
 	elseif ($memberType == 2) {
-		$sqlmember = "select memberid,checkauth,compid from member where disabled!=1 and compid='$compid' and account='$account' and password='$password'";
+		$sqlmember = "select memberid,checkauth,compid from member where disabled!=1 and compid='$compid' and account='$account' and password='$password' and checkauth=1";
 	}
 
 	$stmtmember = sqlsrv_query($conn, $sqlmember);
 
 	if (sqlsrv_fetch($stmtmember)) {
-		return echo json_encode({ login : false });
+		return resData(false, 'Validate fail');
 	}
 
-	$memberid = sqlsrv_get_field($stmtmember, 0);
-	$checkauth = sqlsrv_get_field($stmtmember, 1);
-	$companyid = sqlsrv_get_field($stmtmember, 2);
+	// if ($checkauth != 1) {
+	// 	return resData(false, 'Auth validate fail');
+	// }
 
-	if ($checkauth != "True") {
-		return echo json_encode({ login : false });
-	}
+	$_SESSION['memberid'] = sqlsrv_get_field($stmtmember, 0);
+	$_SESSION['companyid'] = sqlsrv_get_field($stmtmember, 1);
+	$_SESSION['account'] = sqlsrv_get_field($stmtmember, 2);
 
-	$_SESSION['memberid'] = $memberid;
-	$_SESSION['companyid'] = $companyid;
-	$_SESSION['account'] = $account;
-
-	return echo json_encode({ login : true });
-
+	return resData(true, 'Login success');
 
 ?>

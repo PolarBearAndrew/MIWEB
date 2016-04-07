@@ -21,7 +21,7 @@ if ($conn === false) {
 //  session
 // ----------------------
 
-sssion_start();
+session_start();
 if($_SESSION['isLogin'] != 'true') {
 	$_SESSION['isLogin'] = 'false';
 }
