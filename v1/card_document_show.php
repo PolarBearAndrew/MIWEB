@@ -3,7 +3,7 @@
 require_once ('config.php');
 require_once ('validateLogin.php');
 
-$did = $_GET['document'];
+$did = $_GET['documentid'];
 $uid = $_SESSION['memberid'];
 
 // $pid=40;
