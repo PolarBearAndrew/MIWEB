@@ -48,10 +48,10 @@ if ($did !== fales) {
 		'page' => $page
 	);
 
-	// echo json_encode($documentarray);
+	echo json_encode($documentarray);
 
-	echo $_GET['callback'] . "(" . json_encode($documentarray) . ")";
-
+	// echo $_GET['callback'] . "(" . json_encode($documentarray) . ")";
+	
 	// echo $documentarray['page'][0]['text'][0]['textid'];
 
 }

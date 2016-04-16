@@ -79,9 +79,9 @@ function productLayoutGet($name, $conn, $pageStart, $pageShow)
 					'Layout' => $layoutbox
 				);
 
-				// echo json_encode($prodStyleidarray);
+				echo json_encode($prodStyleidarray);
 
-				echo $_GET['callback'] . "(" . json_encode($layoutarray) . ")";
+				// echo $_GET['callback'] . "(" . json_encode($layoutarray) . ")";
 			}
 		}
 	}

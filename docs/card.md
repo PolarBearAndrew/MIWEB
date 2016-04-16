@@ -180,6 +180,7 @@ text[] | ...
 ### GET /v1/card_layout_show.php
 
 * 取得指定的 layout
+* 這個並沒有檢查是否登入
 * 就是這樣~喵~
 
 #### params
