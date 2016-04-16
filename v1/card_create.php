@@ -1,6 +1,9 @@
 
 <?php
-require_once 'config.php';
+
+require_once 'init.php';
+
+require_once 'validateLogin.php';
 
 date_default_timezone_set('Asia/Taipei');
 $date = date('Y-m-d H:i:s');

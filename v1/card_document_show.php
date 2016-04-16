@@ -1,14 +1,18 @@
 <?php
+
 require_once ('config.php');
+require_once ('validateLogin.php');
 
 $did = $_GET['document'];
+$uid = $_SESSION['memberid'];
 
 // $pid=40;
 // $pidarray=PageidGet($did,$conn);
 // $pid=$pidarray['0'];
 // Get document Pageid
 
-$sqlPageidGet = "SELECT pageid FROM document_page WHERE documentid='$did'";
+$sqlPageidGet = "SELECT pageid FROM document_page WHERE documentid='$did' AND memberid='$uid'";
+
 $params = array();
 $options = array(
 	"Scrollable" => SQLSRV_CURSOR_KEYSET
