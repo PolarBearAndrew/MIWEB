@@ -174,3 +174,22 @@ text[] | ...
 	]
 }
 ```
+
+*************
+
+### GET /v1/card_layout_show.php
+
+* 取得指定的 layout
+* 就是這樣~喵~
+
+#### params
+
+none
+
+#### returns
+
+``` js
+
+// ...
+
+```
