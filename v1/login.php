@@ -39,16 +39,15 @@
 
 	$stmtmember = sqlsrv_query($conn, $Query);
 
-	echo $stmtmember;
-	echo sqlsrv_fetch($stmtmember);
-
 	if (!sqlsrv_fetch($stmtmember)) {
 		return resData(false, 'Validate fail');
 	}
 
-	// if ($checkauth != 1) {
-	// 	return resData(false, 'Auth validate fail');
-	// }
+	$memberid = sqlsrv_get_field($stmtmember, 0);
+
+	if ($memberid) {
+		return resData(false, 'Auth validate fail');
+	}
 
 	$_SESSION['memberid'] = sqlsrv_get_field($stmtmember, 0);
 	$_SESSION['companyid'] = sqlsrv_get_field($stmtmember, 1);
