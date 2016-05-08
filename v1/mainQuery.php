@@ -57,13 +57,9 @@
 		die(print_r(sqlsrv_errors() , true));
 	}
 
-	$i = 0;
+	$data = Array();
 	while ($row = sqlsrv_fetch_array($stmt)) {
-		// why dont use push
-		$data[$i] = $row;
-		$i = $i + 1;
+		array_push($data, $row);
 	}
-
 	echo $data;
-
 ?>
