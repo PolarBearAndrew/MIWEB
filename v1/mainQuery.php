@@ -55,10 +55,11 @@
 	if ($result === false) {
 		die(print_r(sqlsrv_errors() , true));
 	}
-
-	$data = Array();
-	while ($row = sqlsrv_fetch_array($stmt)) {
-		array_push($data, $row);
+	else {
+		$data = Array();
+		while ($row = sqlsrv_fetch_array($result)) {
+			array_push($data, $row);
+		}
+		echo $data;
 	}
-	echo $data;
 ?>
