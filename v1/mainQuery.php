@@ -60,6 +60,11 @@
 		while ($row = sqlsrv_fetch_array($result)) {
 			array_push($data, $row);
 		}
-		echo printf($data);
+		$data = array(
+			'data' => $data
+		);
+
+		echo json_encode($data);
+		echo $data;
 	}
 ?>
