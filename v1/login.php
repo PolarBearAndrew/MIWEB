@@ -44,7 +44,7 @@
 
 	$stmtmember = sqlsrv_query($conn, $sqlmember);
 
-	echo 'test';
+	echo $sqlmember;
 	echo sqlsrv_fetch($stmtmember);
 
 	if (!sqlsrv_fetch($stmtmember)) {
