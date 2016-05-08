@@ -46,7 +46,7 @@
 
 	echo sqlsrv_fetch($stmtmember);
 
-	if (sqlsrv_fetch($stmtmember)) {
+	if (!sqlsrv_fetch($stmtmember)) {
 		return resData(false, 'Validate fail');
 	}
 
