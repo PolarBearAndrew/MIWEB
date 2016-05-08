@@ -35,12 +35,12 @@
 	$account = $_POST['account'];
 	$password = $_POST['password'];
 
-	if ($memberType == 1) {
+	// if ($memberType == 1) {
 		$sqlmember = "select memberid,checkauth,compid from member where disabled!=1 and compid=0 and account='$account' and password='$password'";
-	}
-	elseif ($memberType == 2) {
-		$sqlmember = "select memberid,checkauth,compid from member where disabled!=1 and compid='$compid' and account='$account' and password='$password'";
-	}
+	// }
+	// elseif ($memberType == 2) {
+	// 	$sqlmember = "select memberid,checkauth,compid from member where disabled!=1 and compid='$compid' and account='$account' and password='$password'";
+	// }
 
 	$stmtmember = sqlsrv_query($conn, $sqlmember);
 
