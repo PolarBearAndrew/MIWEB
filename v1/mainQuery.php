@@ -1,6 +1,9 @@
 
 <?php
 
+	require_once ('config.php');
+	// require_once ('validateLogin.php');
+
 	$keys = array_keys($_POST);
 
 	$Query = 'SELECT @fields FROM ' . $_POST['table'];
@@ -41,6 +44,26 @@
 		$Query = $Query . $where;
 	}
 
-	echo $Query;
+	// echo $Query;
+
+	$params = array();
+	$options = array(
+		"Scrollable" => SQLSRV_CURSOR_KEYSET
+	);
+	$stmt = sqlsrv_query($conn, $Query, $params, $options);
+	$pageidRow = sqlsrv_num_rows($stmt);
+
+	if ($stmt === false) {
+		die(print_r(sqlsrv_errors() , true));
+	}
+
+	$i = 0;
+	while ($row = sqlsrv_fetch_array($stmt)) {
+		// why dont use push
+		$data[$i] = $row;
+		$i = $i + 1;
+	}
+
+	echo $data;
 
 ?>
