@@ -48,11 +48,6 @@
 		return resData(false, 'Validate fail');
 	}
 
-	$memberid = sqlsrv_get_field($result, 0);
-
-	if ($memberid) {
-		return resData(false, 'Auth validate fail');
-	}
 
 	$_SESSION['memberid'] = sqlsrv_get_field($result, 0);
 	$_SESSION['companyid'] = sqlsrv_get_field($result, 1);
