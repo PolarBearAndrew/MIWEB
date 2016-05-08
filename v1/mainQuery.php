@@ -50,10 +50,9 @@
 	$options = array(
 		"Scrollable" => SQLSRV_CURSOR_KEYSET
 	);
-	$stmt = sqlsrv_query($conn, $Query, $params, $options);
-	$pageidRow = sqlsrv_num_rows($stmt);
+	$result = sqlsrv_query($conn, $Query, $params, $options);
 
-	if ($stmt === false) {
+	if ($result === false) {
 		die(print_r(sqlsrv_errors() , true));
 	}
 
