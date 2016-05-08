@@ -4,6 +4,7 @@
 ### GET /v1/mainQuery.php
 
 * 能 Query 任何你想要的表格的資料
+* 所以依照這樣, 整個資料庫的資料都能取得了
 
 #### params
 
