@@ -22,7 +22,7 @@ key | value
 ---- | ----
 documentid | true
 table | document_page
-document_page | 1
+where[document_page] | 1
 
 #### example.returns
 
