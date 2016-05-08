@@ -60,6 +60,6 @@
 		while ($row = sqlsrv_fetch_array($result)) {
 			array_push($data, $row);
 		}
-		echo print_r($data);
+		echo printf($data);
 	}
 ?>
