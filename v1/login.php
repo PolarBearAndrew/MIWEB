@@ -19,9 +19,9 @@
 	}
 
 	// already login
-	if($_SESSION['isLogin'] == 'true') {
-		return resData(true, 'Already Login');
-	}
+	// if($_SESSION['isLogin'] == 'true') {
+	// 	return resData(true, 'Already Login');
+	// }
 
 	// validate params
 	if (
@@ -48,9 +48,9 @@
 		return resData(false, 'Validate fail');
 	}
 
-	// if ($checkauth != 1) {
-	// 	return resData(false, 'Auth validate fail');
-	// }
+	if ($checkauth != 1) {
+		return resData(false, 'Auth validate fail');
+	}
 
 	$_SESSION['memberid'] = sqlsrv_get_field($stmtmember, 0);
 	$_SESSION['companyid'] = sqlsrv_get_field($stmtmember, 1);
