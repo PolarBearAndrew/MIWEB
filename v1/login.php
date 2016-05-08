@@ -37,21 +37,26 @@
 
 	$Query = "select memberid,compid, account from member where account='$account' and password='$password'";
 
-	$stmtmember = sqlsrv_query($conn, $Query);
+	$params = array();
+	$options = array(
+		"Scrollable" => SQLSRV_CURSOR_KEYSET
+	);
+	$result = sqlsrv_query($conn, $Query, $params, $options);
 
-	if (!sqlsrv_fetch($stmtmember)) {
+
+	if (!sqlsrv_fetch($result)) {
 		return resData(false, 'Validate fail');
 	}
 
-	$memberid = sqlsrv_get_field($stmtmember, 0);
+	$memberid = sqlsrv_get_field($result, 0);
 
 	if ($memberid) {
 		return resData(false, 'Auth validate fail');
 	}
 
-	$_SESSION['memberid'] = sqlsrv_get_field($stmtmember, 0);
-	$_SESSION['companyid'] = sqlsrv_get_field($stmtmember, 1);
-	$_SESSION['account'] = sqlsrv_get_field($stmtmember, 2);
+	$_SESSION['memberid'] = sqlsrv_get_field($result, 0);
+	$_SESSION['companyid'] = sqlsrv_get_field($result, 1);
+	$_SESSION['account'] = sqlsrv_get_field($result, 2);
 
 	return resData(true, 'Login success');
 
