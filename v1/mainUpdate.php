@@ -47,13 +47,13 @@
 		$Query = $Query . $where;
 	}
 
-	// echo $Query;
+	echo $Query;
 
 	$params = array();
 	$options = array(
 		"Scrollable" => SQLSRV_CURSOR_KEYSET
 	);
-	$result = sqlsrv_execute($conn, $Query);
+	$result = sqlsrv_query($conn, $Query, $params, $options);
 
 	if ($result === false) {
 		die(print_r(sqlsrv_errors() , true));
@@ -64,7 +64,7 @@
 			array_push($data, $row);
 		}
 		$data = array(
-			'data' => true
+			'data' => ture
 		);
 
 		echo json_encode($data);
