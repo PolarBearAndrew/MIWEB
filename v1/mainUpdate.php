@@ -47,13 +47,13 @@
 		$Query = $Query . $where;
 	}
 
-	echo $Query;
+	// echo $Query;
 
 	$params = array();
 	$options = array(
 		"Scrollable" => SQLSRV_CURSOR_KEYSET
 	);
-	$result = sqlsrv_execute($conn, $Query, $params, $options);
+	$result = sqlsrv_execute($conn, $Query);
 
 	if ($result === false) {
 		die(print_r(sqlsrv_errors() , true));
