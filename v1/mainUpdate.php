@@ -47,7 +47,7 @@
 		$Query = $Query . $where;
 	}
 
-	echo $Query;
+	// echo $Query;
 
 	$params = array();
 	$options = array(
