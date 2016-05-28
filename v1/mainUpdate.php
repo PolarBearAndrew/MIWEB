@@ -6,7 +6,7 @@
 
 	$keys = array_keys($_POST);
 
-	$Query = 'UPDATE ' . $_POST['table'] . ' SET @fields WHERE ';
+	$Query = 'UPDATE ' . $_POST['table'] . ' SET @fields ';
 
 	// filter
 	$tmp = Array();
