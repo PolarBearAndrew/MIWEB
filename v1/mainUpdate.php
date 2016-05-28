@@ -49,24 +49,24 @@
 
 	echo $Query;
 
-	// $params = array();
-	// $options = array(
-	// 	"Scrollable" => SQLSRV_CURSOR_KEYSET
-	// );
-	// $result = sqlsrv_query($conn, $Query, $params, $options);
-	//
-	// if ($result === false) {
-	// 	die(print_r(sqlsrv_errors() , true));
-	// }
-	// else {
-	// 	$data = Array();
-	// 	while ($row = sqlsrv_fetch_array($result)) {
-	// 		array_push($data, $row);
-	// 	}
-	// 	$data = array(
-	// 		'data' => $data
-	// 	);
-	//
-	// 	echo json_encode($data);
-	// }
+	$params = array();
+	$options = array(
+		"Scrollable" => SQLSRV_CURSOR_KEYSET
+	);
+	$result = sqlsrv_execute($conn, $Query, $params, $options);
+
+	if ($result === false) {
+		die(print_r(sqlsrv_errors() , true));
+	}
+	else {
+		$data = Array();
+		while ($row = sqlsrv_fetch_array($result)) {
+			array_push($data, $row);
+		}
+		$data = array(
+			'data' => true
+		);
+
+		echo json_encode($data);
+	}
 ?>
