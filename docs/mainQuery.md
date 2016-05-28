@@ -1,6 +1,4 @@
 
-*** 這寫法有點 hack, 不要亂學~"~, prototype 的暫時性解法而已 ***
-
 ### GET /v1/mainQuery.php
 
 * 能 Query 任何你想要的表格的資料
@@ -21,7 +19,7 @@ where[{field}] | string | where 條件
 key | value
 ---- | ----
 documentid | true
-table | document_page
+table | documents
 where[document_page] | 1
 
 #### example.returns
